@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.4.0/socket.io.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+    <title>Fun_Space</title>
+</head>
+<style>
+    a {
+        text-decoration-line: none;
+        color: black;
+    }
+
+    .domain {
+        height: 150px;
+        padding-top: 20px;
+        padding-left: 30px;
+    }
+</style>
+
+<body>
+    <div class="domain" onclick="location.href='/';">
+        <h1 style="text-align: center;">Fun_Space</h1>
+    </div>
+    <div style="max-width: 27rem; margin: auto; margin-top: 30px;">
+        <div class="form-group">
+            <label for="exampleInputEmail1">nickname</label>
+            <input type="email" id="gologin" class="form-control" aria-describedby="emailHelp"
+                placeholder="이메일을 입력해 주세요.">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" id="gopassword" class="form-control" placeholder="비밀번호를 입력해 주세요.">
+        </div>
+    </div>
+    <div style="margin-left: 45%; margin-top: 15px;">
+        <button type="submit" onclick="logininput()" class="btn btn-light">로그인</button>
+        <button type="button" onclick="location.href='/signup'" class="btn btn-light">회원가입</button>
+    </div>
+
+
+</body>
+<script>
+    function logininput() {
+        let nickname = $("#gologin").val();
+        let password = $("#gopassword").val()
+        $.ajax({
+            type: "POST",
+            url: "/api/login",
+            data: {
+                nickname:nickname,
+                password: password,
+            },
+            success: function (response) {
+                if (response["errorMessage"]) {
+                    alert(response["errorMessage"])
+                    return;
+                }
+                localStorage.setItem("token", response.token);
+                window.location.href="/";
+            }
+        })
+    }
+
+</script>
+
+</html>

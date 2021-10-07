@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.4.0/socket.io.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <title>Fun_Space</title>
+</head>
+<style>
+    * {
+        font-family: 'Jua', sans-serif;
+    }
+
+    a {
+        text-decoration-line: none;
+        color: black;
+    }
+
+    .domain {
+        height: 150px;
+        padding-top: 70px;
+    }
+
+    .poster {
+        margin-left: 35%;
+    }
+</style>
+
+<body>
+    <div class="domain" onclick="location.href='/';">
+        <h1 style="text-align: center;">Fun_Space</h1>
+    </div>
+    <div style="margin-left: 75%; margin-top: 2px">
+        <button type="submit" id="login_login" onclick="location.href='/login'" class="btn btn-light">로그인</button>
+        <button type="submit" id="logout_logout" onclick="logout()" class="btn btn-light">로그아웃</button>
+        <button type="button" id="signup_signup" onclick="" class="btn btn-light">회원가입</button>
+    </div>
+    <div onclick="box()" class="card w-75" style="margin: auto; margin-top: 40px; text-align: center;">
+        <div class="card-body" style="height: 7rem;">
+            <h5 class="card-title" id="titleing"></h5>
+            <p class="card-text" id="writeing"></p>
+            <p class="card-text" id="nameing"></p>
+        </div>
+    </div>
+    <button id="target" style="margin-left: 46%; margin-top: 20px;" type="button" class="btn btn-light">게시글 수정</button>
+    <div id="form-commentInfo" class="poster">
+        <input id="comment-input" style="width: 30rem; margin-top: 30px;" placeholder="댓글을 입력해 주세요.">
+        <button style="margin-left: 5px;" type="button" class="btn btn-light" id="confirmcomment"
+            onclick="post_comment()">댓글달기</button>
+    </div>
+    <div>
+        <div style="margin-left: 50%; text-align: center;"></div>
+        <h3>comment</h3>
+        <a>nickname</a>
+        <div style="margin-top: 20px;">
+            <button onclick="" type="button" class="btn btn-light">수정</button>
+            <button onclick="" style="margin-left: 10px;" type="button" class="btn btn-light">삭제</button>
+            <div data-id=""></div>
+        </div>
+        <div id="postComment"></div>
+    </div>
+
+</body>
+<script>
+    const _id = window.location.search.replace('?', '');
+    var button = document.getElementById('target');
+    button.addEventListener('click', function (event) { window.location.href = `/editpost?${_id}` });
+
+    const Id = window.location.search.replace('?', '');
+    get_post(Id)
+    
+
+    //로그아웃
+    function logout() {
+        localStorage.clear();
+        window.location.reload();
+        alert("안녕히 가세요. 또 방문 해주세요!")
+    }
+
+    // 게시글 상세페이지
+    function get_post(Id) {
+        $.ajax({
+            type: "GET",
+            url: `/api/detail/${Id}`,
+            data: {},
+            success: function (response) {
+                let get_write = response;
+                $('#titleing').append(get_write.title).val()
+                $('#writeing').append(get_write.write).val()
+                $('#nameing').append(get_write.nickname).val()
+            }
+        })
+    }
+
+   //댓글 저장
+    function post_comment() {
+        const comment = $('#comment-input').val()
+        if (!comment) {
+            alert("댓글이 입력되지 않았습니다.")
+        }
+        $.ajax({
+            type: "POST",
+            url: "/api/comments",
+            data: {
+                comment: comment,
+            },
+            success: function (response) {
+                if (response["result"] == "success") {
+                    alert("작성이 완료되었습니다.")
+                    window.location.reload();
+                }
+            }
+        })
+    }
+
+    //댓글 불러오기
+    // function get_comment(Id) {
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "/api/comment/",
+    //         data: {},
+    //         success: function(response) {
+    //             let comment = response;
+    //             for(let i = 0; i < comment.length; i++){
+    //                 writeComments(comment[i])
+    //             }
+    //         }
+    //     })
+    // }
+</script>
+
+</html>
